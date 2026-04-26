@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eukleia · Estimation locative — La Villa du Parc de la Roseraie, Bonneville-sur-Touques</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; background: #F7F4EF; color: #1B2B4B; min-height: 100vh; }
+  .header { background: #1B2B4B; position: relative; overflow: hidden; }
+  .header-bar { width: 6px; background: #B8975A; position: absolute; left: 0; top: 0; bottom: 0; }
+  .header-inner { padding: 24px 40px 20px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .brand-name { font-family: Georgia, serif; font-size: 20px; letter-spacing: 5px; color: #B8975A; }
+  .brand-sub { font-size: 10px; letter-spacing: 2px; color: #8A9BAB; text-transform: uppercase; }
+  .header-title { font-family: Georgia, serif; font-size: 15px; color: #fff; }
+  .header-subtitle { font-size: 10px; color: #8A9BAB; margin-top: 3px; }
+  .header-meta { text-align: right; }
+  .tabs-wrap { background: #162340; padding: 0 40px; display: flex; gap: 0; border-bottom: 2px solid #B8975A; flex-wrap: wrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+  .tab { padding: 13px 20px; font-size: 12px; color: #8A9BAB; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+  .tab:hover { color: #D4B896; }
+  .tab.active { color: #B8975A; border-bottom-color: #B8975A; font-weight: 600; }
+  .content { padding: 24px 40px 36px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .kpi { background: #fff; border-radius: 10px; padding: 16px 20px; border: 1px solid #EDE8DF; position: relative; overflow: hidden; }
+  .kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #B8975A; }
+  .kpi.accent::before { background: #2D6A4F; }
+  .kpi.dark { background: #1B2B4B; border-color: #1B2B4B; }
+  .kpi.dark::before { background: #B8975A; }
+  .kpi-label { font-size: 11px; color: #8A9BAB; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  .kpi.dark .kpi-label { color: #D4B896; }
+  .kpi-value { font-family: Georgia, serif; font-size: 24px; color: #1B2B4B; }
+  .kpi.accent .kpi-value { color: #2D6A4F; }
+  .kpi.dark .kpi-value { color: #fff; }
+  .kpi-sub { font-size: 11px; color: #8A9BAB; margin-top: 3px; }
+  .table-wrap { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
+  thead tr { background: #1B2B4B; }
+  thead th { padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #D4B896; letter-spacing: 0.5px; }
+  tbody tr { border-bottom: 1px solid #F0EDE7; transition: background 0.15s; }
+  tbody tr:hover { background: #FDFCFA; }
+  tbody td { padding: 8px 12px; color: #1B2B4B; }
+  .total-row td { background: #1B2B4B !important; color: #fff; font-weight: 600; }
+  .total-row td.gold { color: #B8975A; }
+  .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+  .badge-flanc { background: #FAEEDA; color: #633806; }
+  .badge-pic { background: #F3E8F9; color: #5B2175; }
+  .bar-wrap { display: inline-block; width: 55px; height: 6px; background: #F0EDE7; border-radius: 3px; vertical-align: middle; }
+  .bar-fill { height: 6px; border-radius: 3px; }
+  .occ-label { font-size: 11px; color: #8A9BAB; margin-left: 5px; }
+  .green { color: #2D6A4F; font-weight: 600; }
+  .muted { color: #8A9BAB; }
+  .bold-navy { font-weight: 600; color: #1B2B4B; }
+  .chart-wrap { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; padding: 24px; margin-bottom: 20px; }
+  .chart-title { font-family: Georgia, serif; font-size: 15px; color: #1B2B4B; margin-bottom: 16px; }
+  .bar-chart { display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-month { width: 42px; font-size: 11px; color: #8A9BAB; text-align: right; flex-shrink: 0; }
+  .bar-tracks { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .bar-track { height: 16px; border-radius: 3px; min-width: 2px; transition: width 0.4s; display: flex; align-items: center; padding-left: 6px; }
+  .bar-track .bar-label { font-size: 10px; color: #fff; font-weight: 600; white-space: nowrap; }
+  .scenarios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .scenario { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; padding: 18px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .scenario:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .scenario.selected { border-color: #B8975A; border-width: 2px; box-shadow: 0 4px 16px rgba(184,151,90,0.2); }
+  .scenario::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .scenario.plancher::before { background: #8A9BAB; }
+  .scenario.central::before { background: #B8975A; }
+  .scenario.plafond::before { background: #1B2B4B; }
+  .scenario-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .scenario.plancher .scenario-label { color: #8A9BAB; }
+  .scenario.central .scenario-label { color: #B8975A; }
+  .scenario.plafond .scenario-label { color: #1B2B4B; }
+  .scenario-value { font-family: Georgia, serif; font-size: 26px; color: #1B2B4B; margin-bottom: 3px; }
+  .scenario-nights { font-size: 12px; color: #5C6B7A; }
+  .scenario-occup { font-size: 11px; color: #8A9BAB; margin-top: 2px; }
+  .advantage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .adv-card { background: #FDFCFA; padding: 14px 16px; border-radius: 8px; border-left: 3px solid #B8975A; }
+  .adv-card-title { font-family: Georgia, serif; font-size: 13px; color: #1B2B4B; margin-bottom: 4px; font-weight: 600; }
+  .adv-card-desc { font-size: 12px; color: #5C6B7A; line-height: 1.5; }
+  .comp-table { font-size: 12px; }
+  .comp-table td { padding: 7px 10px; }
+  .source { font-size: 10px; color: #8A9BAB; margin-top: 14px; font-style: italic; }
+  .footer { background: #1B2B4B; color: #D4B896; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .footer-brand { font-family: Georgia, serif; font-size: 13px; letter-spacing: 3px; }
+  .footer-contact { font-size: 11px; color: #8A9BAB; }
+  .hidden { display: none; }
+  @media (max-width: 640px) {
+    .header-inner { padding: 16px 18px 14px 22px; }
+    .header-meta { text-align: left; width: 100%; }
+    .tabs-wrap { padding: 0 12px; }
+    .content { padding: 18px 14px 24px; }
+    .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .kpi-value { font-size: 19px; }
+    table { min-width: 520px; font-size: 11px; }
+    .scenarios-grid { grid-template-columns: 1fr; }
+    .chart-wrap { padding: 14px 10px; }
+    .footer { padding: 12px 14px; flex-direction: column; align-items: flex-start; }
+    .tab { padding: 10px 12px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-bar"></div>
+  <div class="header-inner">
+    <div><div class="brand-name">EUKLEIA</div><div class="brand-sub">Conciergerie Premium · Deauville / Trouville</div></div>
+    <div class="header-meta">
+      <div class="header-title">Estimation locative — La Villa du Parc de la Roseraie</div>
+      <div class="header-subtitle">M. Alain Adwokat · 641 chemin de la Forge, 14800 Bonneville-sur-Touques · 250 m² · 10 voyageurs · 5 chambres · Rénovée 2021</div>
+    </div>
+  </div>
+</div>
+<div class="tabs-wrap">
+  <div class="tab active" onclick="showTab('marche', this)">📊 Marché</div>
+  <div class="tab" onclick="showTab('tarification', this)">💰 Tarification</div>
+  <div class="tab" onclick="showTab('positionnement', this)">🚀 Au lancement</div>
+  <div class="tab" onclick="showTab('scenarios', this)">🎯 Scénarios</div>
+  <div class="tab" onclick="showTab('commission', this)">📋 Commission</div>
+</div>
+<div class="content">
+
+<!-- TAB 1 — MARCHÉ -->
+<div id="tab-marche">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Marché agence premium</div><div class="kpi-value">5 500 – 11 250 €</div><div class="kpi-sub">À partir de / semaine · Barnes, Sotheby&rsquo;s, Emile Garcin</div></div>
+    <div class="kpi"><div class="kpi-label">Plateformes août 2026</div><div class="kpi-value">700 – 950 €</div><div class="kpi-sub">Villas 10 voyageurs · Airbnb Tourgéville / Deauville</div></div>
+    <div class="kpi"><div class="kpi-label">Événements moteurs</div><div class="kpi-value">+ 23 %</div><div class="kpi-sub">Prix août vs moyenne annuelle Deauville</div></div>
+    <div class="kpi"><div class="kpi-label">Meeting Barrière 2025</div><div class="kpi-value">74 000</div><div class="kpi-sub">Spectateurs · record de fréquentation</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Comparables directs — Villas 5 chambres 8-10 voyageurs, zone Deauville élargie</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Comparable</th><th>Zone</th><th>Capacité</th><th>Canal</th><th>Tarif / semaine</th><th>Commentaire vs Adwokat</th></tr></thead>
+        <tbody>
+          <tr><td class="bold-navy">Maison 5 ch. Bonneville-sur-Touques</td><td>Bonneville</td><td>5 ch.</td><td>Barnes</td><td class="bold-navy">À partir de 11 250 €</td><td class="muted">Même zone, tarif agence avec prime marque</td></tr>
+          <tr><td class="bold-navy">Villa Deauville 170 m²</td><td>Deauville</td><td>10 pax</td><td>Barnes</td><td class="bold-navy">À partir de 6 200 €</td><td class="muted">Capacité identique, surface inférieure de 30 %</td></tr>
+          <tr><td class="bold-navy">Maison 190 m² Glanville 6 ch.</td><td>Glanville</td><td>9 pax</td><td>Sotheby&rsquo;s</td><td class="bold-navy">5 500 – 7 500 €</td><td class="muted">Zone secondaire, surface proche d&rsquo;Adwokat</td></tr>
+          <tr><td class="bold-navy">Villa La Datcha Bénerville 5 ch.</td><td>Bénerville</td><td>11 pax</td><td>Emile Garcin</td><td class="bold-navy">À partir de 4 000 €</td><td class="muted">Capacité similaire, proche mer, finition standard</td></tr>
+          <tr><td class="bold-navy">Villa avec piscine hauteurs Deauville</td><td>Tourgéville</td><td>10 pax</td><td>Airbnb direct</td><td class="bold-navy">4 900 – 5 500 €</td><td class="muted">Référence plateforme directe, piscine chauffée</td></tr>
+          <tr style="background:#FDF8EE"><td class="bold-navy" style="color:#B8975A">Villa du Parc de la Roseraie</td><td class="bold-navy">Bonneville</td><td class="bold-navy">10 pax</td><td class="bold-navy">Eukleia — Plateformes</td><td class="bold-navy" style="color:#B8975A">Cible : 5 250 – 7 000 €</td><td class="bold-navy">Rénovation 2021 · 4 suites · jardin sud 2 000 m²</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Dynamique été 2026 — Les événements qui tirent la demande</div>
+    <div class="advantage-grid">
+      <div class="adv-card"><div class="adv-card-title">Meeting de Deauville Barrière · 2-30 août 2026</div><div class="adv-card-desc">Record 2025 de fréquentation (+74 000 spectateurs). 7 courses de Groupe 1, dont le Prix Jacques le Marois et le Prix Morny. Moteur principal de demande hôtelière et locative sur toute la zone.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Barrière Deauville Polo Cup · 9-30 août 2026</div><div class="adv-card-desc">Trois semaines de compétition internationale au Deauville International Polo Club. Clientèle internationale solvable, séjours famille/amis de 7 à 10 nuits typiques.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Exposition Claude Monet · Les Franciscaines</div><div class="adv-card-desc">Du 11 juillet au 1ᵉʳ novembre 2026. Événement culturel attirant une clientèle haut de gamme tout au long de l&rsquo;été, prolongeant la saison au-delà du pic hippique.</div></div>
+      <div class="adv-card" style="border-left-color:#B8975A"><div class="adv-card-title" style="color:#B8975A">Positionnement Adwokat dans la cible haute</div><div class="adv-card-desc">Rénovation récente, 4 suites avec salles de douche italienne privatives, jardin 2 000 m² exposé sud, hameau résidentiel sans vis-à-vis. Justifie une prime tarifaire sur le segment plateformes.</div></div>
+    </div>
+  </div>
+  <p class="source">Sources : Barnes Luxury Rentals, Deauville Sotheby&rsquo;s International Realty, Emile Garcin, Airbnb (relevés avril 2026), Likibu, inDeauville, France Galop. Observations sur villas 5 chambres 8-11 voyageurs, zone élargie Deauville. Données non contractuelles.</p>
+</div>
+
+<!-- TAB 2 — TARIFICATION -->
+<div id="tab-tarification" class="hidden">
+  <div class="chart-wrap">
+    <div class="chart-title">Grille tarifaire Eukleia — Calibrée sur la fenêtre commerciale été 2026</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Semaine</th><th>Dates</th><th>Tarif / nuit</th><th>€ / semaine</th><th>Min. séjour</th><th>Contexte marché</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-flanc">S1 — Flanc</span></td><td>26 juillet → 2 août 2026</td><td class="bold-navy">750 €</td><td class="bold-navy">5 250 €</td><td>6 nuits</td><td class="muted">Fin juillet — Jump&rsquo;Estival + Août Musical</td></tr>
+          <tr><td><span class="badge badge-pic">S2 — Pic</span></td><td>2 → 9 août 2026</td><td class="bold-navy">1 000 €</td><td class="bold-navy">7 000 €</td><td>6 nuits</td><td class="muted">Début Meeting Barrière + Prix Morny + Polo Cup</td></tr>
+          <tr><td><span class="badge badge-pic">S3 — Pic</span></td><td>9 → 16 août 2026</td><td class="bold-navy">1 000 €</td><td class="bold-navy">7 000 €</td><td>6 nuits</td><td class="muted">Meeting + Polo Cup simultanés · 15 août férié</td></tr>
+          <tr><td><span class="badge badge-flanc">S4 — Flanc</span></td><td>16 → 22 août 2026</td><td class="bold-navy">800 €</td><td class="bold-navy">5 600 €</td><td>6 nuits</td><td class="muted">Meeting + Polo encore actifs, décrue post-15 août</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="source" style="margin-top:10px">Tarification intelligente des plateformes désactivée — contrôle manuel total. Réservation instantanée désactivée : chaque demande est validée manuellement par Eukleia. Les 4 semaines peuvent être louées séparément (S1+S2+S3 OU S2+S3+S4 OU l&rsquo;intégralité). Ajustement possible en fonction de la vitesse de remplissage observée en avril-mai 2026.</p>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Ménage / séjour</div><div class="kpi-value">à confirmer</div><div class="kpi-sub">Forfait fixe, à la charge du voyageur</div></div>
+    <div class="kpi"><div class="kpi-label">Linge &amp; consommables</div><div class="kpi-value">à confirmer</div><div class="kpi-sub">10 couchages — linge lit + bain</div></div>
+    <div class="kpi"><div class="kpi-label">Caution</div><div class="kpi-value">1 500 €</div><div class="kpi-sub">Paramétrée sur chaque plateforme</div></div>
+    <div class="kpi"><div class="kpi-label">Durée minimale</div><div class="kpi-value">6 nuits</div><div class="kpi-sub">Arrivée vendredi ou samedi uniquement</div></div>
+  </div>
+</div>
+
+<!-- TAB 3 — AU LANCEMENT -->
+<div id="tab-positionnement" class="hidden">
+  <div class="chart-wrap">
+    <div class="chart-title">Les 7 décisions qui cadrent la première saison</div>
+    <div class="table-wrap">
+      <table class="comp-table">
+        <thead><tr><th>Indicateur</th><th>Enjeu du lancement</th><th>Méthode Eukleia</th><th>Effet</th></tr></thead>
+        <tbody>
+          <tr><td class="bold-navy">Filtrage voyageurs</td><td class="muted">Bien de famille, zéro historique</td><td class="bold-navy">Vérification identité + profil + durée adaptée au pic</td><td class="green">Rassurance propriétaire</td></tr>
+          <tr><td class="bold-navy">Tarification</td><td class="muted">Aucun benchmark existant</td><td class="bold-navy">Grille hebdomadaire : 750 / 1 000 / 1 000 / 800 €</td><td class="green">Revenu calibré sur pic août</td></tr>
+          <tr><td class="bold-navy">Diffusion multi-canaux</td><td class="muted">Aucune présence actuelle</td><td class="bold-navy">Airbnb + Booking + Abritel en simultané</td><td class="green">Maximise la captation pic</td></tr>
+          <tr><td class="bold-navy">Durée minimale</td><td class="muted">À cadrer avant mise en ligne</td><td class="bold-navy">6 nuits, arrivée vendredi ou samedi</td><td class="green">Pas de week-end seul, calendrier fluide</td></tr>
+          <tr><td class="bold-navy">Check-in / check-out</td><td class="muted">À paramétrer</td><td class="bold-navy">16 h arrivée / 11 h départ</td><td class="green">Rotations consécutives fluides</td></tr>
+          <tr><td class="bold-navy">Listing &amp; photos</td><td class="muted">À créer depuis zéro</td><td class="bold-navy">Rédaction bilingue + shooting professionnel</td><td class="green">Visibilité haut de segment</td></tr>
+          <tr><td class="bold-navy">Caution &amp; dépôt</td><td class="muted">À définir</td><td class="bold-navy">Caution 1 500 € paramétrée sur chaque plateforme</td><td class="green">Protection du patrimoine</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Les atouts du bien sur le segment</div>
+    <div class="advantage-grid">
+      <div class="adv-card"><div class="adv-card-title">Rénovation intégrale 2021</div><div class="adv-card-desc">Décoration contemporaine, standards haut de gamme. Visuellement prêt pour le shooting, sans travaux préalables.</div></div>
+      <div class="adv-card"><div class="adv-card-title">4 suites avec salle de douche italienne privative</div><div class="adv-card-desc">Configuration rare sur le segment 10 voyageurs. Permet d&rsquo;accueillir 4 familles ou 4 couples sans compromis.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Jardin 2 000 m² exposé sud</div><div class="adv-card-desc">Terrasse 30 m² ensoleillée toute la journée, BBQ, mobilier extérieur complet. Sans vis-à-vis.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Salle de jeux enfants exceptionnelle</div><div class="adv-card-desc">Équipement dédié très fourni au sous-sol, babyfoot, piscine gonflable. Argument fort sur le segment famille élargie.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Hameau résidentiel calme</div><div class="adv-card-desc">Parc de la Roseraie, 5-10 min de Deauville. Voisinage permanent, risque de nuisance très faible.</div></div>
+      <div class="adv-card" style="border-left-color:#B8975A"><div class="adv-card-title" style="color:#B8975A">Bien inédit sur le marché</div><div class="adv-card-desc">Aucun historique locatif, aucune présence plateformes. Effet « nouveauté » fort à la mise en ligne, demande souvent concentrée sur les nouveaux biens premium en zone pic.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4 — SCÉNARIOS -->
+<div id="tab-scenarios" class="hidden">
+  <div class="scenarios-grid">
+    <div class="scenario plancher" onclick="selectScenario('plancher')"><div class="scenario-label">Scénario plancher</div><div class="scenario-value" id="sc-plan-val">—</div><div class="scenario-nights" id="sc-plan-nights">—</div><div class="scenario-occup" id="sc-plan-occ">—</div></div>
+    <div class="scenario central selected" onclick="selectScenario('central')"><div class="scenario-label">✓ Estimation centrale</div><div class="scenario-value" id="sc-cent-val">—</div><div class="scenario-nights" id="sc-cent-nights">—</div><div class="scenario-occup" id="sc-cent-occ">—</div></div>
+    <div class="scenario plafond" onclick="selectScenario('plafond')"><div class="scenario-label">Scénario plafond</div><div class="scenario-value" id="sc-plaf-val">—</div><div class="scenario-nights" id="sc-plaf-nights">—</div><div class="scenario-occup" id="sc-plaf-occ">—</div></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>Semaine</th><th>Dates</th><th>Tarif/nuit</th><th>Louée</th><th>Nuits</th><th>Revenus</th></tr></thead><tbody id="tbody-scenarios"></tbody></table></div>
+  <div class="chart-wrap" style="margin-top:18px"><div class="chart-title" id="sc-chart-title">Revenus par semaine</div><div class="bar-chart" id="bar-chart-scenario"></div></div>
+  <p class="source">Tous les scénarios sont établis avant commission Eukleia et commission plateforme. Le plancher suppose 2 semaines vendues sur 4 (les 2 semaines de pic), le central 3 semaines sur 4, le plafond 4 semaines sur 4. Projection juillet-août 2026 uniquement.</p>
+</div>
+
+<!-- TAB 5 — COMMISSION -->
+<div id="tab-commission" class="hidden">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Palier 1</div><div class="kpi-value" style="color:#2D6A4F">15 % HT</div><div class="kpi-sub">CA mensuel brut &lt; seuil plancher</div></div>
+    <div class="kpi"><div class="kpi-label">Palier 2</div><div class="kpi-value" style="color:#B8975A">20 % HT</div><div class="kpi-sub">Seuil plancher ≤ CA brut &lt; seuil plafond</div></div>
+    <div class="kpi dark"><div class="kpi-label">Palier 3</div><div class="kpi-value">25 % HT</div><div class="kpi-sub">CA mensuel brut ≥ seuil plafond</div></div>
+  </div>
+
+  <div class="scenarios-grid" style="margin-bottom:14px">
+    <div class="scenario plancher" id="comm-sc-plancher" onclick="selectCommScenario('plancher')"><div class="scenario-label">Plancher</div><div class="scenario-value" id="comm-net-plan">—</div><div class="scenario-nights">Net propriétaire</div></div>
+    <div class="scenario central selected" id="comm-sc-central" onclick="selectCommScenario('central')"><div class="scenario-label">✓ Central</div><div class="scenario-value" id="comm-net-cent">—</div><div class="scenario-nights">Net propriétaire</div></div>
+    <div class="scenario plafond" id="comm-sc-plafond" onclick="selectCommScenario('plafond')"><div class="scenario-label">Plafond</div><div class="scenario-value" id="comm-net-plaf">—</div><div class="scenario-nights">Net propriétaire</div></div>
+  </div>
+
+  <div class="kpi-grid" style="margin-bottom:18px">
+    <div class="kpi"><div class="kpi-label">Revenus bruts (hébergement)</div><div class="kpi-value" id="comm-kpi-brut">—</div><div class="kpi-sub">Prix de location × nuits</div></div>
+    <div class="kpi" style="border-left:3px solid #A32D2D"><div class="kpi-label">Commission plateforme (~15 %)</div><div class="kpi-value" id="comm-kpi-plat" style="color:#A32D2D">—</div><div class="kpi-sub">Airbnb ~15 % · Booking 15-18 % · Abritel ~8 %</div></div>
+    <div class="kpi" style="border-left:3px solid #B8975A"><div class="kpi-label">Commission Eukleia</div><div class="kpi-value" id="comm-kpi-euk" style="color:#B8975A">—</div><div class="kpi-sub">15/20/25 % HT sur le CA net plateforme</div></div>
+    <div class="kpi accent"><div class="kpi-label">Net propriétaire</div><div class="kpi-value" id="comm-kpi-net">—</div><div class="kpi-sub">Ce que vous percevez réellement</div></div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Comment fonctionne la commission évolutive</div>
+    <div class="advantage-grid">
+      <div class="adv-card"><div class="adv-card-title">Ordre de calcul</div><div class="adv-card-desc">1. La commission plateforme (Airbnb/Booking/Abritel, ~15 %) est prélevée à la source. 2. La commission Eukleia 15/20/25 % HT s&rsquo;applique ensuite sur le CA net plateforme effectivement encaissé.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Seuils limités à juillet + août 2026</div><div class="adv-card-desc">La fenêtre commerciale étant réduite à l&rsquo;été 2026, l&rsquo;Annexe 1 bis du contrat ne définit des seuils que pour ces deux mois civils. Si vous décidez d&rsquo;ouvrir le calendrier sur d&rsquo;autres mois, un avenant étendra la grille.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Taux global, pas par tranches</div><div class="adv-card-desc">Le palier Eukleia est déterminé chaque mois en comparant le CA brut hébergement du mois aux seuils mensuels. Le taux retenu s&rsquo;applique globalement à la totalité du net plateforme du mois.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Transparence totale</div><div class="adv-card-desc">Reporting mensuel détaillé : commission plateforme, net plateforme, palier Eukleia atteint, commission Eukleia, net propriétaire. Frais de préparation facturés séparément au voyageur.</div></div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title" id="comm-table-title">Détail par mois — Scénario central</div>
+    <div class="table-wrap"><table><thead><tr><th>Mois</th><th>Rev. bruts</th><th>Comm. plateforme</th><th>Comm. Eukleia</th><th>Taux</th><th style="color:#2D6A4F;font-weight:700">Net propriétaire</th></tr></thead><tbody id="tbody-commission"></tbody></table></div>
+  </div>
+  <p class="source">Ordre de calcul : (1) la commission plateforme (Airbnb ~15 %, Booking 15-18 %, Abritel ~8 %) est prélevée à la source sur le CA brut hébergement ; (2) la commission Eukleia 15/20/25 % HT s&rsquo;applique ensuite sur le CA net plateforme encaissé par le Mandant. Frais de préparation (ménage + linge) facturés séparément au voyageur.</p>
+</div>
+
+</div>
+<div class="footer">
+  <div class="footer-brand">EUKLEIA</div>
+  <div class="footer-contact">06 51 66 94 85 · chahine@eukleia.agency · 21 rue Louvel et Brière, 14800 Touques · Document non contractuel — Données marché avril 2026</div>
+</div>
+
+<script>
+// Modèle de données : 4 semaines, avec répartition juillet/août par nuitée
+const WEEKS = [
+  { code:"S1", label:"26 juil → 2 août", tarif:750,  nights:7, days_jul:6, days_aou:1, tag:"Flanc" },
+  { code:"S2", label:"2 → 9 août",       tarif:1000, nights:7, days_jul:0, days_aou:7, tag:"Pic"   },
+  { code:"S3", label:"9 → 16 août",      tarif:1000, nights:7, days_jul:0, days_aou:7, tag:"Pic"   },
+  { code:"S4", label:"16 → 22 août",     tarif:800,  nights:6, days_jul:0, days_aou:6, tag:"Flanc" },
+];
+
+// Scénarios : quelles semaines sont louées
+const SCENARIOS = {
+  plancher: { label:"Plancher", weeks:["S2","S3"],              desc:"2 semaines sur 4 — pic capté uniquement" },
+  central:  { label:"Central",  weeks:["S2","S3","S4"],         desc:"3 semaines sur 4 — pic + flanc de décrue" },
+  plafond:  { label:"Plafond",  weeks:["S1","S2","S3","S4"],    desc:"4 semaines sur 4 — fenêtre complète" },
+};
+
+const PLATFORM_RATE = 0.15;
+
+// Seuils mensuels Annexe 1 bis
+const THRESHOLDS = {
+  "Juillet 2026": { plancher: 2250,  plafond: 4500  },
+  "Août 2026":    { plancher: 10000, plafond: 20000 },
+};
+
+function fmt(n) { return Math.round(n).toLocaleString('fr-FR'); }
+function badgeClass(tag) { return tag === "Pic" ? "badge-pic" : "badge-flanc"; }
+
+function weekRevenue(w) { return w.tarif * w.nights; }
+function scenarioTotal(sc) {
+  return SCENARIOS[sc].weeks.reduce((s, code) => {
+    const w = WEEKS.find(x => x.code === code);
+    return s + weekRevenue(w);
+  }, 0);
+}
+function scenarioNights(sc) {
+  return SCENARIOS[sc].weeks.reduce((s, code) => {
+    const w = WEEKS.find(x => x.code === code);
+    return s + w.nights;
+  }, 0);
+}
+// Revenus mensuels par scénario (prorata nuitées)
+function scenarioMonthly(sc) {
+  let jul = 0, aou = 0;
+  SCENARIOS[sc].weeks.forEach(code => {
+    const w = WEEKS.find(x => x.code === code);
+    jul += w.tarif * w.days_jul;
+    aou += w.tarif * w.days_aou;
+  });
+  return { "Juillet 2026": jul, "Août 2026": aou };
+}
+
+function showTab(id, el) {
+  document.querySelectorAll('.content > div').forEach(d => d.classList.add('hidden'));
+  document.getElementById('tab-' + id).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// TAB 4 — SCÉNARIOS
+let currentScenario = 'central';
+function selectScenario(sc) {
+  currentScenario = sc;
+  document.querySelectorAll('#tab-scenarios .scenario').forEach(s => s.classList.remove('selected'));
+  document.querySelector('#tab-scenarios .scenario.' + sc).classList.add('selected');
+  renderScenarios();
+}
+
+function renderScenarios() {
+  const sc = currentScenario;
+  const totalN = scenarioNights(sc);
+  const totalR = scenarioTotal(sc);
+  const maxRev = Math.max(...WEEKS.map(w => weekRevenue(w)));
+
+  // Mise à jour des 3 cartes
+  Object.keys(SCENARIOS).forEach(key => {
+    const prefix = key === 'plancher' ? 'plan' : key === 'central' ? 'cent' : 'plaf';
+    document.getElementById('sc-'+prefix+'-val').textContent = fmt(scenarioTotal(key)) + ' €';
+    document.getElementById('sc-'+prefix+'-nights').textContent = scenarioNights(key) + ' nuits · ' + SCENARIOS[key].weeks.length + ' semaines';
+    document.getElementById('sc-'+prefix+'-occ').textContent = SCENARIOS[key].desc;
+  });
+
+  // Tableau
+  const tb = document.getElementById('tbody-scenarios');
+  let html = '';
+  WEEKS.forEach(w => {
+    const louee = SCENARIOS[sc].weeks.includes(w.code);
+    const r = louee ? weekRevenue(w) : 0;
+    html += '<tr><td><span class="badge '+badgeClass(w.tag)+'">'+w.code+' — '+w.tag+'</span></td>' +
+            '<td>'+w.label+'</td>' +
+            '<td class="bold-navy">'+w.tarif+' €</td>' +
+            '<td>'+(louee ? '<span class="green">✓ louée</span>' : '<span class="muted">— libre</span>')+'</td>' +
+            '<td>'+(louee ? w.nights : 0)+'</td>' +
+            '<td class="'+(louee ? 'bold-navy' : 'muted')+'">'+fmt(r)+' €</td></tr>';
+  });
+  html += '<tr class="total-row"><td>TOTAL</td><td></td><td></td><td class="gold">'+SCENARIOS[sc].weeks.length+' sem.</td><td class="gold">'+totalN+' n.</td><td class="gold">'+fmt(totalR)+' €</td></tr>';
+  tb.innerHTML = html;
+
+  // Chart bar
+  const scLabel = SCENARIOS[sc].label;
+  const scColor = sc === 'plancher' ? '#8A9BAB' : sc === 'central' ? '#B8975A' : '#1B2B4B';
+  document.getElementById('sc-chart-title').textContent = 'Revenus par semaine — Scénario ' + scLabel;
+  const chartEl = document.getElementById('bar-chart-scenario');
+  let chartHtml = '';
+  WEEKS.forEach(w => {
+    const louee = SCENARIOS[sc].weeks.includes(w.code);
+    const r = louee ? weekRevenue(w) : 0;
+    const width = Math.max(2, r / maxRev * 100);
+    const color = louee ? scColor : '#E5DFD3';
+    chartHtml += '<div class="bar-row"><div class="bar-month">'+w.code+'</div><div class="bar-tracks"><div class="bar-track" style="width:'+width+'%;background:'+color+'"><span class="bar-label">'+(louee ? fmt(r)+' €' : '')+'</span></div></div></div>';
+  });
+  chartEl.innerHTML = chartHtml;
+}
+
+// TAB 5 — COMMISSION
+let currentCommScenario = 'central';
+function selectCommScenario(sc) {
+  currentCommScenario = sc;
+  document.querySelectorAll('#tab-commission .scenario').forEach(s => s.classList.remove('selected'));
+  document.getElementById('comm-sc-' + sc).classList.add('selected');
+  renderCommission();
+}
+
+function renderCommission() {
+  const sc = currentCommScenario;
+  const scLabel = SCENARIOS[sc].label;
+  document.getElementById('comm-table-title').textContent = 'Détail par mois — Scénario ' + scLabel;
+
+  // Calcul net propriétaire pour les 3 scénarios
+  const allNets = {};
+  Object.keys(SCENARIOS).forEach(key => {
+    const monthly = scenarioMonthly(key);
+    let sNet = 0;
+    Object.keys(monthly).forEach(month => {
+      const brut = monthly[month];
+      if (brut === 0) return;
+      const th = THRESHOLDS[month];
+      const commPlat = brut * PLATFORM_RATE;
+      const netPlat = brut - commPlat;
+      let taux;
+      if (brut < th.plancher) taux = 0.15;
+      else if (brut >= th.plafond) taux = 0.25;
+      else taux = 0.20;
+      const commEuk = netPlat * taux;
+      sNet += (netPlat - commEuk);
+    });
+    allNets[key] = sNet;
+  });
+
+  document.getElementById('comm-net-plan').textContent = fmt(allNets.plancher) + ' €';
+  document.getElementById('comm-net-cent').textContent = fmt(allNets.central) + ' €';
+  document.getElementById('comm-net-plaf').textContent = fmt(allNets.plafond) + ' €';
+
+  // Tableau mensuel du scénario sélectionné
+  const monthly = scenarioMonthly(sc);
+  const tb = document.getElementById('tbody-commission');
+  let html = '';
+  let totalBrut = 0, totalCommPlat = 0, totalCommEuk = 0, totalNet = 0;
+
+  Object.keys(monthly).forEach(month => {
+    const brut = monthly[month];
+    if (brut === 0) {
+      html += '<tr><td>'+month+'</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>';
+      return;
+    }
+    const th = THRESHOLDS[month];
+    const commPlat = Math.round(brut * PLATFORM_RATE);
+    const netPlat = brut - commPlat;
+    let taux, tauxLabel;
+    if (brut < th.plancher) { taux = 0.15; tauxLabel = '15 %'; }
+    else if (brut >= th.plafond) { taux = 0.25; tauxLabel = '25 %'; }
+    else { taux = 0.20; tauxLabel = '20 %'; }
+    const commEuk = Math.round(netPlat * taux);
+    const net = netPlat - commEuk;
+    totalBrut += brut;
+    totalCommPlat += commPlat;
+    totalCommEuk += commEuk;
+    totalNet += net;
+    html += '<tr><td class="bold-navy">'+month+'</td><td class="bold-navy">'+fmt(brut)+' €</td><td style="color:#A32D2D">'+fmt(commPlat)+' €</td><td>'+fmt(commEuk)+' €</td><td>'+tauxLabel+'</td><td class="green" style="font-weight:700">'+fmt(net)+' €</td></tr>';
+  });
+  html += '<tr class="total-row"><td>TOTAL</td><td class="gold">'+fmt(totalBrut)+' €</td><td>'+fmt(totalCommPlat)+' €</td><td>'+fmt(totalCommEuk)+' €</td><td></td><td class="gold" style="font-size:14px">'+fmt(totalNet)+' €</td></tr>';
+  tb.innerHTML = html;
+
+  document.getElementById('comm-kpi-brut').textContent = fmt(totalBrut) + ' €';
+  document.getElementById('comm-kpi-plat').textContent = '− ' + fmt(totalCommPlat) + ' €';
+  document.getElementById('comm-kpi-euk').textContent = '− ' + fmt(totalCommEuk) + ' €';
+  document.getElementById('comm-kpi-net').textContent = fmt(totalNet) + ' €';
+}
+
+// Init
+renderScenarios();
+renderCommission();
+</script>
+</body>
+</html>
